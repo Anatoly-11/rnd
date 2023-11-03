@@ -37,5 +37,6 @@
     <None Include="run.bat">
       <Filter>Исходные файлы</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
