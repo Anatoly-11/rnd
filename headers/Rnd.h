@@ -14,6 +14,7 @@ Attention! После использования обязательно вызывать функцию очистки ReleaseRnd. 
 //---------------------------------------------------------------------------------------------------------------------------------
 #include <cstdint>
 #include <string>
+#include <tuple>
 #include <UUID.h>
 #ifndef RND_EXPORT
 #define RND_DLL_API __declspec(dllimport)
@@ -108,27 +109,27 @@ namespace MyRand{
   //-------------------------------------------------------------------------------------------------------------------------------
   RND_DLL_API bool getMultithread() noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API void *GetRnd(const EValType tp, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<void*, MyUuid::UUID> GetRnd(const EValType tp) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndInt8 *GetRnd(const int8_t min, const int8_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndInt8*, MyUuid::UUID> GetRnd(const int8_t min, const int8_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndUint8 *GetRnd(const uint8_t min, const uint8_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndUint8*, MyUuid::UUID> GetRnd(const uint8_t min, const uint8_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndInt16 *GetRnd(const int16_t min, const int16_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndInt16*, MyUuid::UUID> GetRnd(const int16_t min, const int16_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndUint16 *GetRnd(const uint16_t min, const uint16_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndUint16*, MyUuid::UUID> GetRnd(const uint16_t min, const uint16_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndInt *GetRnd(const int32_t min, const int32_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndInt*, MyUuid::UUID> GetRnd(const int32_t min, const int32_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndUint *GetRnd(const uint32_t min, const uint32_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndUint*, MyUuid::UUID> GetRnd(const uint32_t min, const uint32_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndLong *GetRnd(const int64_t min, const int64_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndLong*, MyUuid::UUID> GetRnd(const int64_t min, const int64_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndUlong *GetRnd(const uint64_t min, const uint64_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndUlong*, MyUuid::UUID> GetRnd(const uint64_t min, const uint64_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndFlt *GetRnd(const  real32_t min, const real32_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndFlt*, MyUuid::UUID> GetRnd(const  real32_t min, const real32_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
-  RND_DLL_API IRndDbl *GetRnd(const real64_t  min, const real64_t max, MyUuid::UUID &_gid) noexcept;
+  RND_DLL_API std::tuple<IRndDbl*, MyUuid::UUID> GetRnd(const real64_t  min, const real64_t max) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------
   RND_DLL_API bool ReleaseRnd(const MyUuid::UUID &_gid) noexcept;
   //-------------------------------------------------------------------------------------------------------------------------------

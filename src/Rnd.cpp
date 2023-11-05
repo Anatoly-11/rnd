@@ -317,33 +317,29 @@ struct RndData {
 //---------------------------------------------------------------------------------------------------------------------------------
 static map<MyUuid::UUID, RndData> genRnd;
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API void *MyRand:: GetRnd(const EValType tp, MyUuid::UUID &_gid) noexcept {
-    unique_lock<mutex> grd(mtx, defer_lock);
-    void *rnd = nullptr;
-    switch(tp) {
-    case EValType::Int:
-      if(isMultiThread) {
-        grd.lock();
-        rnd = new RndInt;
-        grd.unlock();
-      } else 
-        rnd = new RndInt;
-      MyUuid::getUUID(_gid);
-      if(isMultiThread) {
-        grd.lock();
-        genRnd.insert(make_pair(_gid, RndData(rnd, tp)));
-        grd.unlock();
-      } else 
-        genRnd.insert(make_pair(_gid, RndData(rnd, tp)));
-      break;
-    default:
-      return nullptr;
-      break;
-    }
-    return rnd;
+RND_DLL_API std::tuple<void *, MyUuid::UUID>  MyRand::GetRnd(const EValType tp) noexcept {
+  unique_lock<mutex> grd(mtx, defer_lock);
+  MyUuid::UUID uid;
+  if(isMultiThread) {
+    grd.lock();
+  }
+  void *rnd = (tp == EValType::Int8 ? (void*)(new RndInt8) :
+    tp == EValType::Uint8 ? (void*)(new RndUint8) :
+    tp == EValType::Int16 ? (void*)(new RndUint16) :
+    tp == EValType::Uint16 ? (void*)(new RndUint16) :
+    tp == EValType::Int ? (void*)(new RndInt) :
+    tp == EValType::Uint ? (void*)(new RndUint) :
+    tp == EValType::Long ? (void*)(new RndLong) :
+    tp == EValType::Ulong ? (void*)(new RndUlong) :
+    tp == EValType::Flt ? (void*)(new RndFlt) :
+    tp == EValType::Dbl ? (void*)(new RndDbl) : nullptr);
+  if(isMultiThread) {
+    grd.unlock();
+  }
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndInt8 *MyRand::GetRnd(const int8_t min, const int8_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndInt8*, MyUuid::UUID> MyRand::GetRnd(const int8_t min, const int8_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndInt8 *rnd = nullptr;
   if(isMultiThread) {
@@ -352,17 +348,17 @@ RND_DLL_API MyRand::IRndInt8 *MyRand::GetRnd(const int8_t min, const int8_t max,
     grd.unlock();
   } else 
     rnd = new RndInt8(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Int8)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Int8)));
     grd.unlock();
   } else 
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Int8)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Int8)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndUint8 *MyRand::GetRnd(const uint8_t min, const uint8_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndUint8*, MyUuid::UUID> MyRand::GetRnd(const uint8_t min, const uint8_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndUint8 *rnd = nullptr;
   if(isMultiThread) {
@@ -371,17 +367,17 @@ RND_DLL_API MyRand::IRndUint8 *MyRand::GetRnd(const uint8_t min, const uint8_t m
     grd.unlock();
   } else
     rnd = new RndUint8(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint8)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint8)));
     grd.unlock();
   } else
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint8)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint8)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndInt16 *MyRand::GetRnd(const int16_t min, const int16_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndInt16*, MyUuid::UUID> MyRand::GetRnd(const int16_t min, const int16_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndInt16 *rnd = nullptr;
   if(isMultiThread) {
@@ -390,17 +386,17 @@ RND_DLL_API MyRand::IRndInt16 *MyRand::GetRnd(const int16_t min, const int16_t m
     grd.unlock();
   } else
     rnd = new RndInt16(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint16)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint16)));
     grd.unlock();
   } else
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint16)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint16)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndUint16 *MyRand::GetRnd(const uint16_t min, const uint16_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API  std::tuple<MyRand::IRndUint16*, MyUuid::UUID> MyRand::GetRnd(const uint16_t min, const uint16_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndUint16 *rnd = nullptr;
   if(isMultiThread) {
@@ -409,16 +405,17 @@ RND_DLL_API MyRand::IRndUint16 *MyRand::GetRnd(const uint16_t min, const uint16_
     grd.unlock();
   } else 
     rnd = new RndUint16(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint16)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint16)));
     grd.unlock();
-  }
-  return rnd;
+  } else 
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint16)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndInt *MyRand::GetRnd(const int32_t min, const int32_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndInt*, MyUuid::UUID> MyRand::GetRnd(const int32_t min, const int32_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndInt *rnd = nullptr;
   if(isMultiThread) {
@@ -427,18 +424,17 @@ RND_DLL_API MyRand::IRndInt *MyRand::GetRnd(const int32_t min, const int32_t max
     grd.unlock();
   } else 
     rnd = new RndInt(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-  }
-  genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Int)));
-  if(isMultiThread) {
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Int)));
     grd.unlock();
-  }
-  return rnd;
+  } else 
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Int)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndUint *MyRand::GetRnd(const uint32_t min, const uint32_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndUint*, MyUuid::UUID> MyRand::GetRnd(const uint32_t min, const uint32_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndUint *rnd = nullptr;
   if(isMultiThread) {
@@ -447,17 +443,17 @@ RND_DLL_API MyRand::IRndUint *MyRand::GetRnd(const uint32_t min, const uint32_t 
     grd.unlock();
   } else 
     rnd = new RndUint(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint)));
     grd.unlock();
   } else 
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Uint)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Uint)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndLong *MyRand::GetRnd(const int64_t min, const int64_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndLong*, MyUuid::UUID> MyRand::GetRnd(const int64_t min, const int64_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndLong *rnd = nullptr;
   if(isMultiThread) {
@@ -466,17 +462,17 @@ RND_DLL_API MyRand::IRndLong *MyRand::GetRnd(const int64_t min, const int64_t ma
     grd.unlock();
   } else 
     rnd = new RndLong(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Long)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Long)));
     grd.unlock();
   } else
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Long)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Long)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndUlong *MyRand::GetRnd(const uint64_t min, const uint64_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndUlong*, MyUuid::UUID> MyRand::GetRnd(const uint64_t min, const uint64_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndUlong *rnd = nullptr;
   if(isMultiThread) {
@@ -485,17 +481,17 @@ RND_DLL_API MyRand::IRndUlong *MyRand::GetRnd(const uint64_t min, const uint64_t
     grd.unlock();
   } else
     rnd = new RndUlong(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Ulong)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Ulong)));
     grd.unlock();
   } else 
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Ulong)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Ulong)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndFlt *MyRand::GetRnd(const real32_t min, const real32_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndFlt*, MyUuid::UUID> MyRand::GetRnd(const real32_t min, const real32_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndFlt *rnd = nullptr;
   if(isMultiThread) {
@@ -504,17 +500,17 @@ RND_DLL_API MyRand::IRndFlt *MyRand::GetRnd(const real32_t min, const real32_t m
     grd.unlock();
   } else
     rnd = new RndFlt(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Flt)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Flt)));
     grd.unlock();
   } else
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Flt)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Flt)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
-RND_DLL_API MyRand::IRndDbl *MyRand::GetRnd(const real64_t min, const real64_t max, MyUuid::UUID &_gid) noexcept {
+RND_DLL_API std::tuple<MyRand::IRndDbl*, MyUuid::UUID> MyRand::GetRnd(const real64_t min, const real64_t max) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
   RndDbl *rnd = nullptr;
   if(isMultiThread) {
@@ -523,14 +519,14 @@ RND_DLL_API MyRand::IRndDbl *MyRand::GetRnd(const real64_t min, const real64_t m
     grd.unlock();
   } else
     rnd = new RndDbl(min, max);
-  MyUuid::getUUID(_gid);
+  MyUuid::UUID uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.lock();
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Dbl)));
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Dbl)));
     grd.unlock();
   } else
-    genRnd.insert(pair(_gid, RndData(rnd, MyRand::EValType::Dbl)));
-  return rnd;
+    genRnd.insert(pair(uid, RndData(rnd, MyRand::EValType::Dbl)));
+  return {rnd, uid};
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 RND_DLL_API bool MyRand::ReleaseRnd(const MyUuid::UUID &_gid)  noexcept {

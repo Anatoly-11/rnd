@@ -2,30 +2,30 @@
 Проверяется создание и освобождение объекта генерации а так же выдача чисел в заданном диапазоне.
 Для типов int, int8, uint64_t, float и double.
 */
-#include <iostream>
-#include <string>
-#include <UUID.h>
-#include <Rnd.h>
 //include test headers modules 
 //#define MANUAL_RUN
 #ifndef MANUAL_RUN
 #include <gtest/gtest.h>
 //#include <gmock/gmock.h>
-#include <vector>
-#include <algorithm>
-#include <cstdint>
 //#else 
 //#include <boost/io/quoted.hpp>
 #endif
+#include <iostream>
+#include <string>
+#include <UUID.h>
+#include <Rnd.h>
+#include <vector>
+#include <algorithm>
+#include <cstdint>
+#include <tuple>
 //---------------------------------------------------------------------------------------------------------------------------------
 using namespace std;
 //---------------------------------------------------------------------------------------------------------------------------------
 #ifndef MANUAL_RUN
 //---------------------------------------------------------------------------------------------------------------------------------
 TEST(TestCreateReleaseRange, tstInt8) { 
-  MyUuid::UUID uid;
   int8_t vmin = -50, vmax = 110;
-  MyRand::IRndInt8 *rnd = MyRand::GetRnd(vmin, vmax, uid);
+  auto[rnd, uid] = MyRand::GetRnd(vmin, vmax);
   vector<int8_t> vv;
   vv.reserve(100);
   for(size_t i = 0; i < 100; i++) {
@@ -38,9 +38,8 @@ TEST(TestCreateReleaseRange, tstInt8) {
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 TEST(TestCreateReleaseRange, tstInt) { 
-  MyUuid::UUID uid;
   int vmin = 0, vmax = 100;
-  MyRand::IRndInt *rnd = MyRand::GetRnd(vmin, vmax, uid);
+  auto[rnd, uid] = MyRand::GetRnd(vmin, vmax);
   vector<int> vv;
   vv.reserve(100);
   for(size_t i = 0; i < 100; i++) {
@@ -53,9 +52,8 @@ TEST(TestCreateReleaseRange, tstInt) {
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 TEST(TestCreateReleaseRange, tstULL) { 
-  MyUuid::UUID uid;
   uint64_t vmin = 0, vmax = 2300;
-  MyRand::IRndUlong *rnd = MyRand::GetRnd(vmin, vmax, uid);
+  auto[rnd, uid] = MyRand::GetRnd(vmin, vmax);
   vector<uint64_t> vv;
   vv.reserve(100);
   for(size_t i = 0; i < 100; i++) {
@@ -68,9 +66,8 @@ TEST(TestCreateReleaseRange, tstULL) {
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 TEST(TestCreateReleaseRange, tstFlt) { 
-  MyUuid::UUID uid;
   float vmin = -5.920f, vmax = 23.45f;
-  MyRand::IRndFlt *rnd = MyRand::GetRnd(vmin, vmax, uid);
+  auto[rnd, uid] = MyRand::GetRnd(vmin, vmax);
   vector<float> vv;
   vv.reserve(100);
   for(size_t i = 0; i < 100; i++) {
@@ -83,9 +80,8 @@ TEST(TestCreateReleaseRange, tstFlt) {
 }
 //---------------------------------------------------------------------------------------------------------------------------------
 TEST(TestCreateReleaseRange, tstDbl) { 
-  MyUuid::UUID uid;
   double vmin = -528.828, vmax = 2339.929;
-  MyRand::IRndDbl *rnd = MyRand::GetRnd(vmin, vmax, uid);
+  auto[rnd, uid] = MyRand::GetRnd(vmin, vmax);
   vector<double> vv;
   vv.reserve(100);
   for(size_t i = 0; i < 100; i++) {
