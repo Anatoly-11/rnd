@@ -319,7 +319,6 @@ static map<MyUuid::UUID, RndData> genRnd;
 //---------------------------------------------------------------------------------------------------------------------------------
 RND_DLL_API std::tuple<void *, MyUuid::UUID>  MyRand::GetRnd(const EValType tp) noexcept {
   unique_lock<mutex> grd(mtx, defer_lock);
-  MyUuid::UUID uid;
   if(isMultiThread) {
     grd.lock();
   }
@@ -333,6 +332,7 @@ RND_DLL_API std::tuple<void *, MyUuid::UUID>  MyRand::GetRnd(const EValType tp) 
     tp == EValType::Ulong ? (void*)(new RndUlong) :
     tp == EValType::Flt ? (void*)(new RndFlt) :
     tp == EValType::Dbl ? (void*)(new RndDbl) : nullptr);
+  auto uid = MyUuid::getUUID();
   if(isMultiThread) {
     grd.unlock();
   }
